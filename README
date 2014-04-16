@@ -1,0 +1,5 @@
+Simple PDO
+
+It is a class for handling connections with different PHP database managers.
+
+For now only supports MySQL driver.
