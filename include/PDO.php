@@ -34,7 +34,7 @@ class MyPDO extends PDO{
 	}
 	
 	public function connection(){
-		//Connection to Driver
+		//Conexión al controlador
 		try{
 		    $this->db_connection = new PDO($this->driver.':host='.$this->host.';dbname='.$this->database, $this->user, $this->password);
 		    $this->db_connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -103,7 +103,10 @@ class MyPDO extends PDO{
 	}
 	
 	public function save($data = array()){
-	
+		
+		$sql = "INSERT INTO ine.types (id, name) VALUES (".$data['id'].", '".$data['name']."');";
+		$this->db_connection->query($sql);
+
 	}
 		
 	public function __destruct(){
@@ -115,19 +118,23 @@ class MyPDO extends PDO{
 $db = new MyPDO($data_connection['driver'], $data_connection['port'], $data_connection['host'], $data_connection['user'], $data_connection['password'], $data_connection['database']);
 
 
-$users = $db->find('usuarios', 'all', array('limit'=>'0, 5'));
+$types = array("id"=>"NULL", "name"=>"Prueba2");
+
+$db->save($types);
+
+
+/*
+$users = $db->find('types', 'all', array('limit'=>'0, 5'));
 
 foreach ($users as $user):
 	echo $user["id"].'<br />';
-	echo $user["password"].'<br />';
-	echo $user["username"].'<br />';
 	echo $user["name"].'<br />';
 	echo "__________________________<br />";
 endforeach;
 
+*/
+//$count_users = $db->find('usuarios', 'count', array('limit'=>'0, 5'));
 
-$count_users = $db->find('usuarios', 'count', array('limit'=>'0, 5'));
-
-echo $count_users;
+//echo $count_users;
 
 ?>
