@@ -1,12 +1,12 @@
 <?php
 /**
-* Un  ejemplo de clase
+* Clase Simple PDO
 *
-* Colocaremos la clase vacia para el ejemplo
+* Clase con la implementación PDO
 *
-* @package    MiProyecto
+* @package    Simple PDO
 * @subpackage Comun
-* @author     Pedro Picapiedra < pedropicapiedra@yabadabado.com>
+* @author     Cristian Bernal <crisbera@gmail.com>
 */
 
 include ('../config/database.php');
