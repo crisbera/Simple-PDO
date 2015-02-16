@@ -1,7 +1,35 @@
 <?php
 
-include ('config/database.php');
-include ('include/mysql_class.php');
+include ('include/PDO.php');
+
+$tipoId = 2;
+
+$db->connection->beginTransaction();
+
+$tipos = $db->find('equipos', 'count', array('conditions'=>'tipo_id='.$tipoId));
+
+if($tipos>0){
+	$db->connection->rollback();
+	echo "Este tipo no puede eliminarse, tiene equipos relacionados";
+}else{
+	$db->delete('tipos', 'id='.$tipoId);
+
+	$tipos = $db->find('equipos', 'count', array('conditions'=>'tipo_id='.$tipoId));
+
+	if($tipos > 0){
+		$db->connection->rollback();
+	}else{
+		$db->connection->commit();
+	}
+}
+
+/*
+
+$count = $dbh->exec("DELETE FROM fruit WHERE colour = 'red'");
+
+SET FOREIGN_KEY_CHECKS = 0; 
+TRUNCATE table1; 
+SET FOREIGN_KEY_CHECKS = 1;
 
 $users = $db->find('usuarios', 'all', array('limit'=>'0, 5'));
 
@@ -21,5 +49,20 @@ $first_user = $db->find('usuarios', 'first', array('order'=>'usuarios.id DESC'))
 echo "ID: ".$first_user['id']."<br />";
 echo "Username: ".$first_user['username']."<br />";
 echo "Password: ".$first_user['password'];
+
+$types = $db->find('types', 'all', array('limit'=>'0, 5'));
+
+foreach ($types as $type):
+	echo $type["id"].'<br />';
+	echo $type["name"].'<br />';
+	echo "__________________________<br />";
+endforeach;
+
+$count_users = $db->find('usuarios', 'count', array('limit'=>'0, 5'));
+
+echo $count_users;
+
+*/
+
 
 ?>
