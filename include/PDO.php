@@ -22,6 +22,7 @@ class ClassPDO{
 	private $username;
 	private $password;
 	public  $result;
+	public  $lastInsertId;
 
 /**
   * Constructor de la clase
@@ -160,6 +161,8 @@ class ClassPDO{
 
 		$this->result = $this->connection->query($sql);
 
+		$this->lastInsertId = $this->connection->lastInsertId();
+
 		return $this->result;
 	}
 
@@ -225,8 +228,8 @@ class ClassPDO{
 		$this->result = $this->connection->query($sql);
 
 		return $this->result;
-	}
-
+	}		
+		
 }
 
 $db = new ClassPDO();

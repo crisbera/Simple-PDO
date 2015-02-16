@@ -2,6 +2,10 @@
 
 include ('include/PDO.php');
 
+/*
+* Ejemplo sobre eliminar un registros en la tabla types
+*
+
 $tipoId = 22;
 
 $db->connection->beginTransaction();
@@ -21,6 +25,53 @@ if($numero>0){
 	}else{
 		$db->connection->commit();
 	}
+}
+*/
+
+
+/**
+* Ejemplo sobre agregar un registros en la tabla types, brands y en devices
+*
+*
+*
+*/
+
+$db->connection->beginTransaction();
+
+$types = array(
+	"name"=>"Prueba8"
+	);
+
+$brands = array(
+	"name"=>"Prueba"
+	);
+
+if($db->save('types', $types)){
+	$type_id = $db->lastInsertId;
+	if($db->save('brands', $brands)){
+		$brand_id = $db->lastInsertId;
+		$devices = array(
+			"type_id" => $type_id,
+			"brand_id"=> $brand_id,
+			"description"=> "Computadora DELL",
+			"serie_number"=> "90909",
+			"stock_number"=> "22211",
+			"model"=> "WEEQ8889",
+			"responsible"=> "Juan Perez",
+			"purchase_date"=> "2015-02-16",
+			"warranty_end"=> "2016-02-16",
+			"location"=> "Oficina",
+			"status"=> 1
+		);
+
+		if($db->save('devices', $devices)){
+			$db->connection->commit();
+		}else{
+			$db->connection->rollback();
+		}
+	}
+}else{
+	$db->connection->rollback();
 }
 
 
