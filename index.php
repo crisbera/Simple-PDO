@@ -2,28 +2,33 @@
 
 include ('include/PDO.php');
 
-$tipoId = 2;
+$tipoId = 22;
 
 $db->connection->beginTransaction();
 
-$tipos = $db->find('equipos', 'count', array('conditions'=>'tipo_id='.$tipoId));
+$numero = $db->find('devices', 'count', array('conditions'=>'type_id='.$tipoId));
 
-if($tipos>0){
+if($numero>0){
 	$db->connection->rollback();
 	echo "Este tipo no puede eliminarse, tiene equipos relacionados";
 }else{
-	$db->delete('tipos', 'id='.$tipoId);
+	$db->delete('types', 'id='.$tipoId);
 
-	$tipos = $db->find('equipos', 'count', array('conditions'=>'tipo_id='.$tipoId));
+	$numero = $db->find('devices', 'count', array('conditions'=>'type_id='.$tipoId));
 
-	if($tipos > 0){
+	if($numero > 0){
 		$db->connection->rollback();
 	}else{
 		$db->connection->commit();
 	}
 }
 
+
+
 /*
+SET FOREIGN_KEY_CHECKS = 0; 
+TRUNCATE table1; 
+SET FOREIGN_KEY_CHECKS = 1;
 
 $count = $dbh->exec("DELETE FROM fruit WHERE colour = 'red'");
 
