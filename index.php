@@ -5,8 +5,8 @@ include ('include/PDO.php');
 /*
 * Ejemplo sobre eliminar un registros en la tabla types
 *
-
-$tipoId = 22;
+*/
+$tipoId = 34;
 
 $db->connection->beginTransaction();
 
@@ -18,15 +18,15 @@ if($numero>0){
 }else{
 	$db->delete('types', 'id='.$tipoId);
 
-	$numero = $db->find('devices', 'count', array('conditions'=>'type_id='.$tipoId));
+	//$numero = $db->find('devices', 'count', array('conditions'=>'type_id='.$tipoId));
 
-	if($numero > 0){
-		$db->connection->rollback();
-	}else{
+	if($db->numberRows > 0){
 		$db->connection->commit();
+	}else{
+		$db->connection->rollback();
 	}
 }
-*/
+
 
 
 /**
@@ -39,21 +39,25 @@ if($numero>0){
 $db->connection->beginTransaction();
 
 $types = array(
-	"name"=>"Prueba8"
+	"name"=>"Laptop"
 	);
 
 $brands = array(
-	"name"=>"Prueba"
+	"name"=>"Compaq"
 	);
 
 if($db->save('types', $types)){
 	$type_id = $db->lastInsertId;
+	$db->connection->createSavePoint("P1");
+
 	if($db->save('brands', $brands)){
 		$brand_id = $db->lastInsertId;
+		$db->connection->createSavePoint("P2");
+
 		$devices = array(
 			"type_id" => $type_id,
 			"brand_id"=> $brand_id,
-			"description"=> "Computadora DELL",
+			"description"=> "Computadora",
 			"serie_number"=> "90909",
 			"stock_number"=> "22211",
 			"model"=> "WEEQ8889",
@@ -69,11 +73,13 @@ if($db->save('types', $types)){
 		}else{
 			$db->connection->rollback();
 		}
+	}else{
+		$db->connection->rollbackTo("P1");
+		//$db->connection->rollback();
 	}
 }else{
 	$db->connection->rollback();
 }
-
 
 
 /*

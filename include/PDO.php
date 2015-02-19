@@ -23,6 +23,7 @@ class ClassPDO{
 	private $password;
 	public  $result;
 	public  $lastInsertId;
+	public $numberRows;
 
 /**
   * Constructor de la clase
@@ -227,8 +228,30 @@ class ClassPDO{
 
 		$this->result = $this->connection->query($sql);
 
+		$this->numberRows = $this->result->rowCount();
+
 		return $this->result;
-	}		
+	}
+
+	public function crateSavePoint($name = null){
+		$sql = "SAVEPOINT ".$name;
+		$this->connection->query($sql);
+	}
+
+	public function deleteSavePoint($name = null){
+		$sql = "RELEASE SAVEPOINT ".$name;
+		$this->connection->query($sql);
+	}
+
+	public function rollbackTo($name = null){
+	$sql = "ROLLBACK TO ".$name;
+	$this->connection->query($sql);
+	}
+
+	public function lockTables(){
+		$sql = "LOCK TABLE ".$name;
+		$this->connection->query($sql);
+	}				
 		
 }
 
