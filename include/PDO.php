@@ -13,12 +13,15 @@
  * send a note to license@php.net so we can mail you a copy immediately.
  *
  * @package    PDO
- * @author     Cristian Bernal <crisbera@gmail.com.com>
+ * @author     Cristian Bernal <crisbera@gmail.com>
  */
 
 class ClassPDO{
 	public  $connection;
 	private $dsn;
+	private $drive;
+	private $host;
+	private $database;
 	private $username;
 	private $password;
 	public  $result;
@@ -29,10 +32,12 @@ class ClassPDO{
   * Constructor de la clase
   * @return void
   */
-	public function __construct(){
-		$this->dsn = 'mysql:host=localhost;dbname=ine';
-		$this->username = 'root';
-		$this->password = '';
+	public function __construct($drive = 'mysql', $host = 'localhost', $database = 'test', $username = 'root', $password = ''){
+		$this->drive    = $drive;
+		$this->host     = $host;
+		$this->database = $database;
+		$this->username = $username;
+		$this->password = $password;
 		$this->connection();
 	}
 
@@ -44,13 +49,16 @@ class ClassPDO{
   * @return void
   */
 	private function connection(){
+		$this->dsn = $this->drive.':host='.$this->host.';dbname='.$this->database;
 		try{
 			$this->connection = new PDO(
 				$this->dsn,
 				$this->username,
 				$this->password
 			);
-			$this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			$this->connection->setAttribute(
+				PDO::ATTR_ERRMODE, 
+				PDO::ERRMODE_EXCEPTION);
 		}catch(PDOException $e){
 			echo "ERROR: " . $e->getMessage();
 			die();
@@ -232,27 +240,6 @@ class ClassPDO{
 
 		return $this->result;
 	}
-
-	public function crateSavePoint($name = null){
-		$sql = "SAVEPOINT ".$name;
-		$this->connection->query($sql);
-	}
-
-	public function deleteSavePoint($name = null){
-		$sql = "RELEASE SAVEPOINT ".$name;
-		$this->connection->query($sql);
-	}
-
-	public function rollbackTo($name = null){
-	$sql = "ROLLBACK TO ".$name;
-	$this->connection->query($sql);
-	}
-
-	public function lockTables(){
-		$sql = "LOCK TABLE ".$name;
-		$this->connection->query($sql);
-	}				
-		
 }
 
 $db = new ClassPDO();
